@@ -1,93 +1,93 @@
-import flet as ft
+import flet as ft 
 import pandas as pd
-from io import BytesIO
-from fpdf import FPDF
+from io import BytesIO # Para manejar el PDF en memoria
+from fpdf import FPDF # Para generar el PDF
 import os  # Para manejar los nombres y rutas de archivos
 
 # Función para generar el PDF
 def generar_pdf(df):
-    pdf = FPDF()
-    pdf.add_page()
-    pdf.set_font("Arial", size=12)
+    pdf = FPDF() # Crear instancia de FPDF
+    pdf.add_page() # Añadir una página al PDF
+    pdf.set_font("Arial", size=12) # Establecer la fuente y tamaño del texto
     
-    # Añadir encabezado
-    pdf.cell(40, 10, "Tiempo", border=1)
+    # Añadimos encabezado
+    pdf.cell(40, 10, "Tiempo", border=1) # Anchura, altura, texto, borde
     pdf.cell(30, 10, "Fuerza", border=1)
     pdf.cell(30, 10, "Ataque", border=1)
     pdf.cell(30, 10, "Salida", border=1)
     pdf.cell(40, 10, "Verticalidad", border=1)
-    pdf.ln()
+    pdf.ln() # Salto de línea
 
-    # Añadir contenido de la tabla
-    for _, row in df.iterrows():
-        pdf.cell(40, 10, str(row.iloc[0]), border=1)
+    # Añadiendo contenido de la tabla
+    for _, row in df.iterrows(): # Iterar sobre las filas del DataFrame
+        pdf.cell(40, 10, str(row.iloc[0]), border=1) # Anchura, altura, texto, borde
         pdf.cell(30, 10, str(row.iloc[1]), border=1)
         pdf.cell(30, 10, str(row.iloc[2]), border=1)
         pdf.cell(30, 10, str(row.iloc[3]), border=1)
         pdf.cell(40, 10, str(row.iloc[4]), border=1)
         pdf.ln()
 
-    buffer = BytesIO()
-    pdf_output = pdf.output(dest='S').encode('latin1')  # Se genera el PDF en bytes
-    buffer.write(pdf_output)
-    buffer.seek(0)
-    return buffer
+    buffer = BytesIO() # Crear un buffer en memoria para guardar el PDF generado
+    pdf_output = pdf.output(dest='S').encode('latin1')  # Se genera el PDF en bytes y se codifica en latin1
+    buffer.write(pdf_output) # Escribir el contenido del PDF en el buffer en memoria
+    buffer.seek(0) # Mover el puntero al inicio del buffer para que pueda ser leído correctamente por el usuario
+    return buffer # Devolver el buffer con el contenido del PDF generado
 
-def main(page: ft.Page):
-    def on_file_upload(e):
-        if e.files:
-            # Validar el tipo de archivo
-            file_name = e.files[0].name
-            file_extension = file_name.split('.')[-1]
-            if file_extension not in ['csv', 'txt']:
-                page.add(ft.Text("Formato de archivo no válido. Solo se permiten archivos CSV o TXT."))
-                return
+def main(page: ft.Page): # Función principal de la aplicación
+    def on_file_upload(e): # Función que se ejecuta al subir un archivo
+        if e.files: # Si se ha subido un archivo correctamente 
+            # Validamos el tipo de archivo
+            file_name = e.files[0].name # Nombre del archivo
+            file_extension = file_name.split('.')[-1] # Extensión del archivo
+            if file_extension not in ['csv', 'txt']: # Solo permitimos archivos CSV o TXT 
+                page.add(ft.Text("Formato de archivo no válido. Solo se permiten archivos CSV o TXT.")) # Mostrar mensaje de error
+                return # Salir de la función si el archivo no es válido 
             
-            # Obtener la ruta del archivo cargado
-            file_path = e.files[0].path
+            # Obtenemos la ruta del archivo cargado
+            file_path = e.files[0].path 
 
-            # Obtener el nombre del archivo sin extensión para usarlo en el PDF
-            base_file_name = os.path.splitext(file_name)[0]
+            # Obtenemos el nombre del archivo sin extensión para usarlo en el PDF
+            base_file_name = os.path.splitext(file_name)[0] 
             pdf_file_name = f"{base_file_name}.pdf"
             
-            # Leer el archivo desde la ruta como DataFrame
+            # Leemos el archivo desde la ruta como DataFrame
             df = pd.read_csv(file_path, header=None, names=[
                 "Tiempo", "Fuerza", "Ataque", "Salida", "Verticalidad"
             ])
             
-            # Eliminar la primera fila si es incorrecta
+            # Eliminamos la primera fila si es incorrecta
             df = df.drop(index=0).reset_index(drop=True)
             
-            # Crear el PDF
+            # Creamos el PDF a partir del DataFrame y lo guardamos en memoria
             pdf_content = generar_pdf(df)
 
-            # Guardar el PDF en el directorio actual
+            # Guardamos el PDF en el directorio actual
             output_path = os.path.join(os.getcwd(), pdf_file_name)
             with open(output_path, "wb") as f:
                 f.write(pdf_content.read())
 
-            # Mostrar mensaje de confirmación
-            page.add(ft.Text(f"PDF guardado en: {output_path}"))
+            # Mostramos mensaje de confirmación
+            page.add(ft.Text(f"PDF guardado en: {output_path}")) 
 
-            # Mostrar botón para abrir la carpeta donde se guardó el archivo
+            # Botón para abrir la carpeta donde se guardó el archivo
             page.add(
                 ft.ElevatedButton(
                     "Abrir carpeta",
-                    on_click=lambda _: os.startfile(os.getcwd()),  # Abre la carpeta actual
+                    on_click=lambda _: os.startfile(os.getcwd()),  # Abre la carpeta donde está el archivo
                     width=250
                 )
             )
 
     # Estilo general de la página
-    page.theme_mode = ft.ThemeMode.DARK  # Puedes cambiarlo a LIGHT si prefieres
-    page.title = "Conversor de TXT a PDF"
-    page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
-    page.vertical_alignment = ft.MainAxisAlignment.CENTER
+    page.theme_mode = ft.ThemeMode.DARK  # Puedes cambiarlo a LIGHT si prefieres? pero queda bien así
+    page.title = "Conversor de TXT a PDF" # Título de la página
+    page.horizontal_alignment = ft.CrossAxisAlignment.CENTER # Alineación horizontal
+    page.vertical_alignment = ft.MainAxisAlignment.CENTER # Alineación vertical
     page.bgcolor = ft.colors.BLACK  # Fondo oscuro
     
     # Contenedor para la subida del archivo
-    file_picker = ft.FilePicker(on_result=on_file_upload)
-    page.overlay.append(file_picker)
+    file_picker = ft.FilePicker(on_result=on_file_upload) # Crear un componente FilePicker
+    page.overlay.append(file_picker) # Añadir el FilePicker a la página para que se muestre
 
     # Layout principal
     page.add(
@@ -95,7 +95,7 @@ def main(page: ft.Page):
             [
                 ft.Text(
                     "Sube tu archivo de texto (CSV o TXT)",
-                    size=24,  # Tamaño de fuente más grande
+                    size=24,  # Tamaño de fuente más grande que el predeterminado (20)
                     weight=ft.FontWeight.BOLD,
                     color=ft.colors.WHITE
                 ),
@@ -111,11 +111,11 @@ def main(page: ft.Page):
                     )
                 )
             ],
-            alignment=ft.MainAxisAlignment.CENTER,
+            alignment=ft.MainAxisAlignment.CENTER, # Alineación de los elementos del Column 
             horizontal_alignment=ft.CrossAxisAlignment.CENTER,
-            spacing=30  # Espaciado entre elementos
+            spacing=30  # Espaciado entre elementos del Column 
         )
     )
 
-# Ejecutar la aplicación en ventana emergente
-ft.app(target=main)
+# Ejecución de la aplicación en ventana emergente
+ft.app(target=main) # Lanzar la aplicación con la función main como punto de entrada
