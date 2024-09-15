@@ -1,6 +1,11 @@
 # 🌟 Proyecto: Paleando con José 🚣‍♂️
 
-En este repo se incluyen las aplicaciones que utilizaremos para transformar los archivos en txt o csv que devuelve el sensor de la pala a pdf con las columnas renombradas y con formato de tabla para poder entrenar la IA.
+En este repo se incluyen las aplicaciones que utilizaremos para realizar el entrenamiento de la IA para el proyecto de sensor de las palas de José.
+
+Estas aplicaciones incluyen de momento:
+
+- Aplicación para transformar texto y csv por pdf transformado para entrenamiento.
+- (más cosas que vendrán muy pronto)
 
 También hay un pequeño cuaderno de jupyter notebook que contiene un análisis muy básico que comenté con José en su día para poder aprender un poco sobre qué datos mostraban los sensores.
 
@@ -10,8 +15,12 @@ Aunque la lógica es la misma básicamente en todas las apps, puede variar algun
 
 - **[Streamlit](https://streamlit.io/)**
 - **[Flet](https.flet.dev)**
-- **[Django](https://www.djangoproject.com/)**
+- **[Django](https://www.djangoproject.com/ (coming VERY soon)**
 - **[Reflex](https://reflex.dev/) (coming soon)**
+
+## Instrucciones de uso 📄
+
+Dentro de cada carpeta se incluye un archivo .md que te guiará para el proceso de instalación o ejecución de la aplicación.
 
 ## 🚀 Funcionalidades
 
@@ -40,13 +49,14 @@ Aunque la lógica es la misma básicamente en todas las apps, puede variar algun
 - **Streamlit**
 - **fpdf** (para la generación de PDFs)
 - **pandas** (para la manipulación de datos)
+- **flet**
 
 ## 🛠️ Instalación
 
 Para usar la app, clona este repositorio e instala los requisitos:
 
 ```bash
-git clone git@github.com:b0rjen/paleando.git
+git clone git@github.com:b0rjen/Paleando.git
 cd paleando
 pip install -r requirements.txt
 ```
