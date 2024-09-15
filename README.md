@@ -15,7 +15,7 @@ Aunque la lógica es la misma básicamente en todas las apps, puede variar algun
 
 - **[Streamlit](https://streamlit.io/)**
 - **[Flet](https.flet.dev)**
-- **[Django](https://www.djangoproject.com/ (coming VERY soon)**
+- **[Django](https://www.djangoproject.com/) (coming VERY soon)**
 - **[Reflex](https://reflex.dev/) (coming soon)**
 
 ## Instrucciones de uso 📄
