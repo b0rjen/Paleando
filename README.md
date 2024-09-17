@@ -5,7 +5,7 @@ En este repo se incluyen las aplicaciones que utilizaremos para realizar el entr
 Estas aplicaciones incluyen de momento:
 
 - Aplicación para transformar texto y csv por pdf transformado para entrenamiento.
-- (más cosas que vendrán muy pronto)
+- Aplicación pdftoopenai que transforma el texto subido y lo promptea con OpenAI. **Tiene limitaciones de tokens por la API.**
 
 También hay un pequeño cuaderno de jupyter notebook que contiene un análisis muy básico que comenté con José en su día para poder aprender un poco sobre qué datos mostraban los sensores.
 
